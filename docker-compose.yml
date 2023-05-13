@@ -1,0 +1,51 @@
+version: '3'
+services:
+  ceos-1:
+    hostname: CEOS-1
+    image: 'ceos:4.28.6.1M'
+    command: /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=docker systemd.setenv=MAPETH0=1 systemd.setenv=MGMT_INTF=eth0
+    privileged: true
+    environment:
+      container: docker
+      CEOS: 1
+      EOS_PLATFORM: ceoslab
+      SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT: 1
+      ETBA: 1
+      INTFTYPE: eth
+      MGMT_INTF: eth0
+      MAPETH0: 1
+    volumes:
+      - /home/ldo/repos/ceos_lab/configs/ceos_1.conf:/mnt/flash/startup-config
+    networks:
+      clab:
+        ipv4_address: 172.20.20.254
+      r1r2:
+  ceos-2:
+    hostname: CEOS-2
+    image: 'ceos:4.28.6.1M'
+    command: /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=docker systemd.setenv=MAPETH0=1 systemd.setenv=MGMT_INTF=eth0
+    privileged: true
+    environment:
+      container: docker
+      CEOS: 1
+      EOS_PLATFORM: ceoslab
+      SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT: 1
+      ETBA: 1
+      INTFTYPE: eth
+      MGMT_INTF: eth0
+      MAPETH0: 1
+    volumes:
+      - /home/ldo/repos/ceos_lab/configs/ceos_2.conf:/mnt/flash/startup-config
+    networks:
+      clab:
+        ipv4_address: 172.20.20.253
+      r1r2:
+
+networks:
+  clab:
+    name: clab
+    ipam:
+      config:
+        - subnet: 172.20.20.0/24
+          gateway: 172.20.20.1
+  r1r2:
